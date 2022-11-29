@@ -63,9 +63,10 @@
                 <input placeholder="Movie" name="name" style="width: 500px;" type="text" id="tags" required="required">
                 <button type="submit">Submit</button>
             </form>
+            <h3>{{ error }}</h3>
         </center>
         </div>
-
+        {% if error=="" %}
         <div class="container">
             <div class="poster_area">
                 <img id="poster" src="https://image.tmdb.org/t/p/w500/{{ data['poster_path'] }}">
@@ -97,6 +98,8 @@
             {% endfor %}
             {% endif %}
         </div>
+
+        {% endif %}
 
         <script>
             $( function() {
