@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Movie Recommendation System</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>  
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>  
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"/>  
+        <link rel="stylesheet"  type="text/css" href="./static/style.css">
+        <style>
+
+            .searchbar {
+                width: 600px;
+                margin:auto;
+            }
+            .container {
+                margin: auto;
+                padding: 30px;
+                height: 500px;
+                margin-right: 50px;
+                margin-left: 50px;
+                color: black;
+            }
+            .poster_area {
+                float: left;
+                width: 300px;
+            }
+            .details {
+                float: left;
+                margin-left: 20px;
+                height: auto;
+                width: 60%;
+                padding: 20px;
+            }
+            #poster {
+                margin: auto;
+                width: 300px;
+                height: 450px;
+            }
+            #name {
+            }
+            .banner {
+                height: 400px;
+                width: 300px;
+            }
+            .row {
+                display: flex;
+            }
+            .column {
+                flex: 50%;
+            }
+                            
+        </style>
+    </head>
+    <body>
+        <center><h1 onclick="window.location.href='{{ url_for('home') }}'">Movie Recommendation System</h1></center>
+
+        <div class="searchbar">
+        <center>
+            <form action="/movie" method="post">
+                <input placeholder="Movie" name="name" style="width: 500px;" type="text" id="tags" required="required">
+                <button type="submit">Submit</button>
+            </form>
+        </center>
+        </div>
+
+        <div class="container">
+            <div class="poster_area">
+                <img id="poster" src="https://image.tmdb.org/t/p/w500/{{ data['poster_path'] }}">
+            </div>
+            <div class="details">
+                <h1 id="name">{{ data['title'] }}</h1>
+                {% for i in data['genres'] %}
+                <span><u>{{ i['name'] }}</u>, </span>
+                {% endfor %}
+                <p>{{ data['tagline'] }}</p>
+                <p>{{ data['overview'] }}</p>
+                <p><b>Rating:</b> {{ data['vote_average'] }} ({{ data['vote_count'] }} votes)</p>
+                <p><b>Released data:</b> {{ data['release_date'] }}</p>
+                <p><b>Runtime:</b> {{ data['runtime'] }} mins</p>
+                <span><b>Languages spoken:</b></span>
+                {% for i in data['spoken_languages'] %}
+                <span>{{ i['name'] }}, </span>
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="row">
+            {% if recommendations %}
+            {% for movie in recommendations.keys() %}
+                <div class="column">
+                    <img class="banner" src="https://image.tmdb.org/t/p/w500/{{ recommendations[movie]['poster_path'] }}" onclick="window.location.href='{{ url_for('load', id=movie) }}';">
+                    <center><h3>{{ recommendations[movie]['title'] }}</h3></center>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <script>
+            $( function() {
+              var availableTags = [
+                  {% for movie in movies_list %}
+                      "{{movie}}",
+                  {% endfor %}
+              ];
+              $( "#tags" ).autocomplete({
+                source: availableTags
+              });
+            } );
+        </script>
+
+
+    </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Movie Recommendation System</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>  
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>  
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"/>  
+        <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+
+        <style>
+            .row {
+                display: flex;
+            }
+
+            .column {
+                flex: 50%;
+            }
+            .searchbar {
+                width: 600px;
+                margin:auto;
+            }
+            .banner {
+                height: 400px;
+                width: 300px;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <center><h1>Movie Recommendation System</h1></center>
+        <div class="searchbar">
+            <form action="/movie" method="post">
+                <input placeholder="Movie" name="name" style="width: 500px;" type="text" id="tags" required="required">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        
+        <div class="row">
+            {% if movies %}
+            {% for movie in movies.keys() %}
+                <div class="column">
+                    <img class="banner" src="https://image.tmdb.org/t/p/w500/{{ movies[movie]['poster_path'] }}" onclick="window.location.href='{{ url_for('load', id=movie) }}';">
+                    <center><h3>{{ movies[movie]['title'] }}</h3></center>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <script>
+            $( function() {
+              var availableTags = [
+                  {% for movie in movies_list %}
+                      "{{movie}}",
+                  {% endfor %}
+              ];
+              $( "#tags" ).autocomplete({
+                source: availableTags
+              });
+            } );
+        </script>
+
+
+    </body>
+</html>
